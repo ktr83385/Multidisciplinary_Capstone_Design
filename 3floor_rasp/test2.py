@@ -168,7 +168,6 @@ def wind_speed( vdc):
 try:
 	while True:
 		st = " "
-		
 		ser.flushInput()
 		buffer = ser.read(1024)
 
@@ -195,7 +194,7 @@ try:
 		time.sleep(1)
 		# readadc 함수로 ldr_channel의 SPI 데이터를 읽어 저장
 		
-		'''
+
 		CO_vgas_value = readadc(CO_vgas_channel)
 		CO_vref_value = readadc(CO_vref_channel)
 		CO2_value = readadc(CO2_channel)
@@ -208,7 +207,7 @@ try:
 		print('Cx = : ' , CO_ppm)
 		time.sleep(1)
 		
-		#print ("---------------------------------------")
+		print ("---------------------------------------")
 		CO2_v = 3.3*CO2_value/1024
 		CO2_v_di = CO2_v / 8.5
 		print('readvol_CO2 : ' , CO2_value , 'voltage:', CO2_v_di)
@@ -216,7 +215,7 @@ try:
 		CO2_ppm = pow(10, ((CO2_v_di - 0.079) / CO2_slope + 3.698))
 		CO2_ppm = CO2_ppm_min(CO2_hum_v(CO2_temp_v(CO2_ppm)))
 		print(CO2_ppm)
-		'''
+
 		
 
 except keyboardInterrupt:
