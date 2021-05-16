@@ -145,3 +145,74 @@ try:
 
 except keyboardInterrupt:
 	spi.close()
+
+#이산화 탄소 400이하 값 처리
+def CO2_ppm_min(co2_ppm):
+  if co2_ppm < 400:
+    co2_ppm = 400
+  return co2_ppm
+
+#일산화 탄소 음수 처리
+def CO_ppm_positive(co_ppm):
+  if co_ppm < 0:
+    co_ppm = 0
+  return co_ppm
+
+#온도에 따른 co값 적용
+
+def CO_temp_ppm(temp, co_ppm):
+  if temp <= -16:
+    rate = 1*( temp +16 ) + 73
+  elif temp <= -4:
+    rate = 0.916667*( temp +4 ) + 84
+  elif temp <= 8:
+    rate = 0.75*( temp - 8 ) + 93
+  elif temp <= 20:
+    rate = 0.583333*( temp - 20 ) + 100
+  elif temp <= 36:
+    rate = 0.3125*( temp - 36 ) + 105
+  else:
+    rate = 0.214286*( temp - 50 ) + 108
+  return co_ppm*rate
+
+#온도에 따른 co2값 적용
+
+def CO2_temp_v(temp, co2_v):
+  if temp <= 0:
+    co2_v = 0.1*( temp ) + 338.2
+  elif temp <= 10:
+    co2_v = 0.18*( temp - 10 ) + 340
+  elif temp <= 20:
+    co2_v = 0.14*( temp - 20 ) + 341.4
+  elif temp <= 30:
+    co2_v = 0.16*( temp - 30 ) + 343
+  else:
+    co2_v = 0.14*( temp - 50 ) + 345.8
+  return co2_v
+
+#습도에 따른 co2값 적용
+
+def CO2_hum_v(hum, co2_v):
+  if hum <= 40:
+    co2_v = -0.025*( hum - 40 ) + 350.3
+  elif hum <= 65.5:
+    co2_v = -0.01961*( hum - 65.5 ) + 349.8
+  else:
+    co2_v = -0.12308*( hum - 85 ) + 347.4
+  return co2_v
+
+#전압에 따른 풍속 출력
+
+def wind_speed( vdc):
+  speed = 0
+  if vdc <= 0.5:
+    speed = 0
+  elif vdc <= 0.7:
+    speed = 0.266667(vdc - 0.7) + 0.75
+  elif vdc <= 0.7:
+    speed = 0.546667(vdc - 1.11) + 1.5
+  elif vdc <= 1.58:
+    speed = 0.546667(vdc - 1.58) + 2.25
+  else:
+    speed = 0.56(vdc - 2) + 3
+  return speed
