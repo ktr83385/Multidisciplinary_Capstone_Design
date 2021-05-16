@@ -91,61 +91,6 @@ time.sleep(0.5e-3)
 sht85.periodic(mps,rep)
 time.sleep(1)
 
-try:
-	while True:
-		st = " "
-		
-		ser.flushInput()
-		buffer = ser.read(1024)
-
-		PM1_0, PM2_5, PM10_0 = dust.print_serial(buffer)
-		t,rh = sht85.read_data()
-		
-		#PM1_0_fix = f'{PM1_0:3}'
-		PM1_0_fix = '{0:05d}'.format(PM1_0)
-		PM2_5_fix = '{0:05d}'.format(PM2_5)
-		PM10_0_fix = '{0:05d}'.format(PM10_0)
-		t_fix = '{0:.2f}'.format(t)
-		rh_fix = '{0:.2f}'.format(rh)
-		
-		st = str(PM1_0_fix)
-		st += str(PM2_5_fix)
-		st += str(PM10_0_fix)
-		st += str(t_fix)
-		st += str(rh_fix)
-		
-		print('Temperature =', t_fix, 'Relative Humidity =', rh_fix, 'PM1.0 = ', 
-				PM1_0_fix, 'PM2.5 = ', PM2_5_fix, 'PM10.0 = ', PM10_0_fix)
-
-		mqttc.publish("inTopic", st)
-		time.sleep(1)
-		# readadc 함수로 ldr_channel의 SPI 데이터를 읽어 저장
-		
-		'''
-		CO_vgas_value = readadc(CO_vgas_channel)
-		CO_vref_value = readadc(CO_vref_channel)
-		CO2_value = readadc(CO2_channel)
-		
-		print ("---------------------------------------")
-		print('readvol_CO_vgas : ' , CO_vgas_value , ' Voltage:' , 3*CO_vgas_value/1024 )
-		print ("---------------------------------------")
-		print('readvol_CO_vref : ' , CO_vref_value , ' Voltage:' , 3*CO_vref_value/1024 )
-		print('Cx = : ' , CO_1_M*((3*CO_vgas_value/1024)-(3*CO_vref_value/1024)))
-		time.sleep(1)
-		
-		#print ("---------------------------------------")
-		CO2_v = 3.3*CO2_value/1024
-		CO2_v_di = CO2_v / 8.5
-		print('readvol_CO2 : ' , CO2_value , 'voltage:', CO2_v_di)
-		time.sleep(1)
-		CO2_ppm = pow(10, ((CO2_v_di - 0.079) / CO2_slope + 3.698))
-		print(CO2_ppm)
-		'''
-		
-
-except keyboardInterrupt:
-	spi.close()
-
 #이산화 탄소 400이하 값 처리
 def CO2_ppm_min(co2_ppm):
   if co2_ppm < 400:
@@ -216,3 +161,64 @@ def wind_speed( vdc):
   else:
     speed = 0.56(vdc - 2) + 3
   return speed
+
+
+
+
+try:
+	while True:
+		st = " "
+		
+		ser.flushInput()
+		buffer = ser.read(1024)
+
+		PM1_0, PM2_5, PM10_0 = dust.print_serial(buffer)
+		t,rh = sht85.read_data()
+		
+		#PM1_0_fix = f'{PM1_0:3}'
+		PM1_0_fix = '{0:05d}'.format(PM1_0)
+		PM2_5_fix = '{0:05d}'.format(PM2_5)
+		PM10_0_fix = '{0:05d}'.format(PM10_0)
+		t_fix = '{0:.2f}'.format(t)
+		rh_fix = '{0:.2f}'.format(rh)
+		
+		st = str(PM1_0_fix)
+		st += str(PM2_5_fix)
+		st += str(PM10_0_fix)
+		st += str(t_fix)
+		st += str(rh_fix)
+		
+		print('Temperature =', t_fix, 'Relative Humidity =', rh_fix, 'PM1.0 = ', 
+				PM1_0_fix, 'PM2.5 = ', PM2_5_fix, 'PM10.0 = ', PM10_0_fix)
+
+		mqttc.publish("inTopic", st)
+		time.sleep(1)
+		# readadc 함수로 ldr_channel의 SPI 데이터를 읽어 저장
+		
+		'''
+		CO_vgas_value = readadc(CO_vgas_channel)
+		CO_vref_value = readadc(CO_vref_channel)
+		CO2_value = readadc(CO2_channel)
+		
+		print ("---------------------------------------")
+		print('readvol_CO_vgas : ' , CO_vgas_value , ' Voltage:' , 3*CO_vgas_value/1024 )
+		print ("---------------------------------------")
+		print('readvol_CO_vref : ' , CO_vref_value , ' Voltage:' , 3*CO_vref_value/1024 )
+		CO_ppm = CO_ppm_positive(CO_temp_ppm(CO_1_M*((3*CO_vgas_value/1024)-(3*CO_vref_value/1024))))
+		print('Cx = : ' , CO_ppm)
+		time.sleep(1)
+		
+		#print ("---------------------------------------")
+		CO2_v = 3.3*CO2_value/1024
+		CO2_v_di = CO2_v / 8.5
+		print('readvol_CO2 : ' , CO2_value , 'voltage:', CO2_v_di)
+		time.sleep(1)
+		CO2_ppm = pow(10, ((CO2_v_di - 0.079) / CO2_slope + 3.698))
+		CO2_ppm = CO2_ppm_min(CO2_hum_v(CO2_temp_v(CO2_ppm)))
+		print(CO2_ppm)
+		'''
+		
+
+except keyboardInterrupt:
+	spi.close()
+
