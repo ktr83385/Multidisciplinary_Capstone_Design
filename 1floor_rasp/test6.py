@@ -120,16 +120,14 @@ def on_message(client, userdata, msg):
 		CO2_value = readadc(CO2_channel)
 		
 		#CO_ppm = CO_1_M*((3*CO_vgas_value/1024)-(3*CO_vref_value/1024))
-        CO_ppm = CO_ppm_positive(CO_temp_ppm(temp, CO_1_M * ((3 * CO_vgas_value / 1024) - (3 * CO_vref_value / 1024))))
+        CO_ppm = CO_ppm_positive(CO_temp_ppm(temp, CO_1_M * ((3 * CO_vgas_value / 1024) - (3 * CO_vref_value / 1024))))#온도 고려
 
 		
 		CO2_v = 3.3*CO2_value/1024
 		CO2_v_di = CO2_v / 8.5
+        CO2_v_di = CO2_hum_v(humi, CO2_temp_v(temp,CO2_v_di))#온습도 고려
 
-
-        CO2_v_di = CO2_hum_v(CO2_temp_v(temp,CO2_v_di))
-
-		CO2_ppm = pow(10, (humi, (CO2_v_di - 0.079) / CO2_slope + 3.698))
+		CO2_ppm = pow(10, ((CO2_v_di - 0.079) / CO2_slope + 3.698))
 		
 		_point1 = Point("sangrokwon").tag("location", "3_floor").field("PM1.0", PM1_0)
 		_point2 = Point("sangrokwon").tag("location", "3_floor").field("PM2.5", PM2_5)

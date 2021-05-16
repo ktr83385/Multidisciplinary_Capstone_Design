@@ -203,17 +203,17 @@ try:
 		print('readvol_CO_vgas : ' , CO_vgas_value , ' Voltage:' , 3*CO_vgas_value/1024 )
 		print ("---------------------------------------")
 		print('readvol_CO_vref : ' , CO_vref_value , ' Voltage:' , 3*CO_vref_value/1024 )
-		CO_ppm = CO_ppm_positive(CO_temp_ppm(t_fix,CO_1_M*((3*CO_vgas_value/1024)-(3*CO_vref_value/1024))))
+		CO_ppm = CO_ppm_positive(CO_temp_ppm(t_fix,CO_1_M*((3*CO_vgas_value/1024)-(3*CO_vref_value/1024)))) #온도 고려
 		print('Cx = : ' , CO_ppm)
 		time.sleep(1)
 		
 		print ("---------------------------------------")
 		CO2_v = 3.3*CO2_value/1024
 		CO2_v_di = CO2_v / 8.5
+        CO2_v_di = CO2_hum_v(rh_fix, CO2_temp_v(t_fix, CO2_v_di))  #온습도 고려
 		print('readvol_CO2 : ' , CO2_value , 'voltage:', CO2_v_di)
 		time.sleep(1)
 		CO2_ppm = pow(10, ((CO2_v_di - 0.079) / CO2_slope + 3.698))
-		#CO2_ppm = CO2_ppm_min(CO2_hum_v(rh_fix,CO2_temp_v(t_fix,CO2_ppm)))
 		print(CO2_ppm)
 
 		
