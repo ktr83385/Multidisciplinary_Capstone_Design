@@ -24,13 +24,13 @@ data1 = " "
 #이산화 탄소 400이하 값 처리
 def CO2_ppm_min(co2_ppm):
   if co2_ppm < 400:
-    co2_ppm = 400
+    co2_ppm = 400.0
   return co2_ppm
 
 #일산화 탄소 음수 처리
 def CO_ppm_positive(co_ppm):
   if co_ppm < 0:
-    co_ppm = 0
+    co_ppm = 0.0
   return co_ppm
 
 #온도에 따른 co값 적용
@@ -54,34 +54,34 @@ def CO_temp_ppm(temp, co_ppm):
 
 def CO2_temp_v(temp, co2_v):
   if temp <= 0:
-    co2_v = 0.1*( temp ) + 338.2
+    rate = (0.1*( temp ) + 338.2)/350
   elif temp <= 10:
-    co2_v = 0.18*( temp - 10 ) + 340
+    rate = (0.18*( temp - 10 ) + 340)/350
   elif temp <= 20:
-    co2_v = 0.14*( temp - 20 ) + 341.4
+    rate = (0.14*( temp - 20 ) + 341.4)/350
   elif temp <= 30:
-    co2_v = 0.16*( temp - 30 ) + 343
+    rate = (0.16*( temp - 30 ) + 343)/350
   else:
-    co2_v = 0.14*( temp - 50 ) + 345.8
-  return co2_v
+    rate = (0.14*( temp - 50 ) + 345.8)/350
+  return co2_v*rate
 
 #습도에 따른 co2값 적용
 
 def CO2_hum_v(hum, co2_v):
   if hum <= 40:
-    co2_v = -0.025*( hum - 40 ) + 350.3
+    rate = (-0.025*( hum - 40 ) + 350.3)/350
   elif hum <= 65.5:
-    co2_v = -0.01961*( hum - 65.5 ) + 349.8
+    rate = (-0.01961*( hum - 65.5 ) + 349.8)/350
   else:
-    co2_v = -0.12308*( hum - 85 ) + 347.4
-  return co2_v
+    rate = (-0.12308*( hum - 85 ) + 347.4)/350
+  return co2_v * rate
 
 #전압에 따른 풍속 출력
 
 def wind_speed( vdc):
   speed = 0
   if vdc <= 0.5:
-    speed = 0
+    speed = 0.0
   elif vdc <= 0.7:
     speed = 0.266667(vdc - 0.7) + 0.75
   elif vdc <= 0.7:
@@ -121,14 +121,12 @@ def on_message(client, userdata, msg):
 		
 		#CO_ppm = CO_1_M*((3*CO_vgas_value/1024)-(3*CO_vref_value/1024))
         CO_ppm = CO_ppm_positive(CO_temp_ppm(temp, CO_1_M * ((3 * CO_vgas_value / 1024) - (3 * CO_vref_value / 1024))))#온도 고려
-
-		
 		CO2_v = 3.3*CO2_value/1024
 		CO2_v_di = CO2_v / 8.5
         CO2_v_di = CO2_hum_v(humi, CO2_temp_v(temp,CO2_v_di))#온습도 고려
 
 		CO2_ppm = pow(10, ((CO2_v_di - 0.079) / CO2_slope + 3.698))
-		
+
 		_point1 = Point("sangrokwon").tag("location", "3_floor").field("PM1.0", PM1_0)
 		_point2 = Point("sangrokwon").tag("location", "3_floor").field("PM2.5", PM2_5)
 		_point3 = Point("sangrokwon").tag("location", "3_floor").field("PM10.0", PM10_0)
