@@ -24,13 +24,13 @@ data1 = " "
 #이산화 탄소 400이하 값 처리
 def CO2_ppm_min(co2_ppm):
   if co2_ppm < 400:
-    co2_ppm = 400.0
+    co2_ppm = float(400)
   return co2_ppm
 
 #일산화 탄소 음수 처리
 def CO_ppm_positive(co_ppm):
   if co_ppm < 0:
-    co_ppm = 0.0
+    co_ppm = float(0)
   return co_ppm
 
 #온도에 따른 co값 적용
@@ -48,7 +48,7 @@ def CO_temp_ppm(temp, co_ppm):
     rate = 0.3125*( temp - 36 ) + 105
   else:
     rate = 0.214286*( temp - 50 ) + 108
-  return co_ppm*rate
+  return co_ppm*rate/100
 
 #온도에 따른 co2값 적용
 
@@ -121,6 +121,8 @@ def on_message(client, userdata, msg):
 		
 		#CO_ppm = CO_1_M*((3*CO_vgas_value/1024)-(3*CO_vref_value/1024))
         CO_ppm = CO_ppm_positive(CO_temp_ppm(temp, CO_1_M * ((3 * CO_vgas_value / 1024) - (3 * CO_vref_value / 1024))))#온도 고려
+
+
 		CO2_v = 3.3*CO2_value/1024
 		CO2_v_di = CO2_v / 8.5
         CO2_v_di = CO2_hum_v(humi, CO2_temp_v(temp,CO2_v_di))#온습도 고려
@@ -260,8 +262,8 @@ try:
 		_point6 = Point("test").tag("location", "SW Center").field("PM10.0", PM10_0)
 		_point7 = Point("test").tag("location", "SW Center").field("CO_ppm", CO_ppm)
 		write_api.write(bucket=bucket, record=[_point1,_point2,_point3,_point4,_point5,_point6,_point7])
-		
 		time.sleep(0.5)
 		'''
 except KeyboardInterrupt:
 	spi.close()
+

@@ -37,7 +37,7 @@ mqttc.on_message = on_message
 delay = 1
 
 # 일산화탄소 ppm 계수 
-CO_1_M = 2475.24
+CO_1_M = 227.79   #2277.90
 
 # 이산화탄소 ppm 계수, 전압에따른 기울기
 CO2_max_v = 0.6670898437499999 		#10000ppm
