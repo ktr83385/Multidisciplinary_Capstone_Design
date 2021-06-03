@@ -46,13 +46,24 @@ df_3f.index = np.arange(len(df_3f))
 fig, axes = plt.subplots(5,1, figsize=(40,40))
 plt.rc('ytick', labelsize=50)
 
+# 각각의 임계치 설정 해주기
+
+df_1f['co_cut'] = 10
+df_1f['co2_cut'] = 1000
+df_1f['pm1_cut'] =  25
+df_1f['pm2_5_cut'] =   25
+df_1f['pm10_cut'] =   50
+fig, axes = plt.subplots(5,1, figsize=(40,40))
+plt.rc('ytick', labelsize=50)
+
 axes[0].set_title("C02 24h curve", fontsize = 40)
 axes[0].set_xlabel("Time")
 axes[0].set_ylabel("CO2 ppm", fontsize = 30)
 
 axes[0].plot(df_1f['_time'][::600], df_1f['CO2_ppm_1f'][::600], color = 'r', label ='1f')   # 10분 간격으로 수치값 변화
 axes[0].plot(df_3f['_time'][::600], df_3f['CO2_ppm_3f'][::600], color = 'b', label = '3f')
-axes[0].legend(loc='best')
+axes[0].plot(df_1f['_time'][::600], df_1f['co2_cut'][::600], color = 'g', label ='Danger cut')
+axes[0].legend(loc='best', fontsize = 30)
 
 axes[1].set_title("C0 24h curve", fontsize = 40)
 axes[1].set_xlabel("Time")
@@ -60,7 +71,8 @@ axes[1].set_ylabel("CO ppm", fontsize = 30)
 
 axes[1].plot(df_1f['_time'][::600], df_1f['CO_ppm_1f'][::600], color = 'r', label ='1f')   # 10분 간격으로 수치값 변화
 axes[1].plot(df_3f['_time'][::600], df_3f['CO_ppm_3f'][::600], color = 'b', label = '3f')
-axes[1].legend(loc='best')
+axes[1].plot(df_1f['_time'][::600], df_1f['co_cut'][::600], color = 'g', label ='Danger cut')
+axes[1].legend(loc='best', fontsize = 30)
 
 axes[2].set_title("PM1.0 24h curve", fontsize = 40)
 axes[2].set_xlabel("Time")
@@ -68,6 +80,7 @@ axes[2].set_ylabel("PM1.0", fontsize = 30)
 
 axes[2].plot(df_1f['_time'][::600], df_1f['PM1.0_1f'][::600], color = 'r', label ='1f')   # 10분 간격으로 수치값 변화
 axes[2].plot(df_3f['_time'][::600], df_3f['PM1.0_3f'][::600], color = 'b', label = '3f')
+axes[2].plot(df_1f['_time'][::600], df_1f['pm1_cut'][::600], color = 'g', label ='Danger cut')
 axes[2].legend(loc='best', fontsize = 30)
 
 axes[3].set_title("PM2.5 24h curve", fontsize = 40)
@@ -76,7 +89,8 @@ axes[3].set_ylabel("PM2.5", fontsize = 30)
 
 axes[3].plot(df_1f['_time'][::600], df_1f['PM2.5_1f'][::600], color = 'r', label ='1f')   # 10분 간격으로 수치값 변화
 axes[3].plot(df_3f['_time'][::600], df_3f['PM2.5_3f'][::600], color = 'b', label = '3f')
-axes[3].legend(loc='best')
+axes[3].plot(df_1f['_time'][::600], df_1f['pm2_5_cut'][::600], color = 'g', label ='Danger cut')
+axes[3].legend(loc='best', fontsize = 30)
 
 axes[4].set_title("PM10.0 24h curve", fontsize = 40)
 axes[4].set_xlabel("Time")
@@ -84,7 +98,8 @@ axes[4].set_ylabel("PM10.0", fontsize = 30)
 
 axes[4].plot(df_1f['_time'][::600], df_1f['PM10.0_1f'][::600], color = 'r', label ='1f')   # 10분 간격으로 수치값 변화
 axes[4].plot(df_3f['_time'][::600], df_3f['PM10.0_3f'][::600], color = 'b', label = '3f')
-axes[4].legend(loc='best')
+axes[4].plot(df_1f['_time'][::600], df_1f['pm10_cut'][::600], color = 'g', label ='Danger cut')
+axes[4].legend(loc='best', fontsize = 30)
 plt.savefig('24h_change.png')
 plt.show()
 
